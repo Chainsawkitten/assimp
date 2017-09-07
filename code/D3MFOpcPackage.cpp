@@ -2,7 +2,8 @@
 Open Asset Import Library (assimp)
 ----------------------------------------------------------------------
 
-Copyright (c) 2006-2016, assimp team
+Copyright (c) 2006-2017, assimp team
+
 All rights reserved.
 
 Redistribution and use of this software in source and binary forms,
@@ -38,6 +39,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ----------------------------------------------------------------------
 */
 
+#ifndef ASSIMP_BUILD_NO_3MF_IMPORTER
 
 #include "D3MFOpcPackage.h"
 #include "Exceptional.h"
@@ -47,14 +49,12 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <assimp/DefaultLogger.hpp>
 #include <assimp/ai_assert.h>
 
+#include <cstdlib>
 #include <memory>
 #include <vector>
 #include <map>
 #include <algorithm>
 #include <cassert>
-#include <cstdlib>
-
-#ifndef ASSIMP_BUILD_NO_3MF_IMPORTER
 
 #include <contrib/unzip/unzip.h>
 
@@ -123,19 +123,19 @@ voidpf IOSystem2Unzip::open(voidpf opaque, const char* filename, int mode) {
 uLong IOSystem2Unzip::read(voidpf /*opaque*/, voidpf stream, void* buf, uLong size) {
     IOStream* io_stream = (IOStream*) stream;
 
-    return io_stream->Read(buf, 1, size);
+    return static_cast<uLong>(io_stream->Read(buf, 1, size));
 }
 
 uLong IOSystem2Unzip::write(voidpf /*opaque*/, voidpf stream, const void* buf, uLong size) {
     IOStream* io_stream = (IOStream*) stream;
 
-    return io_stream->Write(buf, 1, size);
+    return static_cast<uLong>(io_stream->Write(buf, 1, size));
 }
 
 long IOSystem2Unzip::tell(voidpf /*opaque*/, voidpf stream) {
     IOStream* io_stream = (IOStream*) stream;
 
-    return io_stream->Tell();
+    return static_cast<long>(io_stream->Tell());
 }
 
 long IOSystem2Unzip::seek(voidpf /*opaque*/, voidpf stream, uLong offset, int origin) {
@@ -229,7 +229,7 @@ ZipFile::~ZipFile() {
 
 size_t ZipFile::Read(void* pvBuffer, size_t pSize, size_t pCount) {
     const size_t size = pSize * pCount;
-    assert(size <= m_Size);
+    ai_assert(size <= m_Size);
 
     std::memcpy(pvBuffer, m_Buffer, size);
 

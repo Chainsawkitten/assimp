@@ -3,7 +3,8 @@
 Open Asset Import Library (assimp)
 ---------------------------------------------------------------------------
 
-Copyright (c) 2006-2016, assimp team
+Copyright (c) 2006-2017, assimp team
+
 
 All rights reserved.
 
@@ -54,6 +55,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <assimp/IOSystem.hpp>
 #include <assimp/scene.h>
 #include <assimp/DefaultLogger.hpp>
+#include <assimp/importerdesc.h>
 #include "StringComparison.h"
 
 using namespace Assimp;
@@ -182,7 +184,7 @@ void Discreet3DSImporter::InternReadFile( const std::string& pFile,
     ParseMainChunk();
 
     // Process all meshes in the file. First check whether all
-    // face indices haev valid values. The generate our
+    // face indices have valid values. The generate our
     // internal verbose representation. Finally compute normal
     // vectors from the smoothing groups we read from the
     // file.
@@ -679,7 +681,7 @@ void Discreet3DSImporter::ParseHierarchyChunk(uint16_t parent)
 
         if ( pcNode)
         {
-            // if the source is not a CHUNK_TRACKINFO block it wont be an object instance
+            // if the source is not a CHUNK_TRACKINFO block it won't be an object instance
             if (parent != Discreet3DS::CHUNK_TRACKINFO)
             {
                 mCurrentNode = pcNode;

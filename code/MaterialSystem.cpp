@@ -2,7 +2,8 @@
 Open Asset Import Library (assimp)
 ----------------------------------------------------------------------
 
-Copyright (c) 2006-2016, assimp team
+Copyright (c) 2006-2017, assimp team
+
 All rights reserved.
 
 Redistribution and use of this software in source and binary forms,
@@ -455,6 +456,9 @@ aiReturn aiMaterial::AddBinaryProperty (const void* pInput,
     ai_assert (pKey != NULL);
     ai_assert (0 != pSizeInBytes);
 
+    if ( 0 == pSizeInBytes ) {
+
+    }
     // first search the list whether there is already an entry with this key
     unsigned int iOutIndex = UINT_MAX;
     for (unsigned int i = 0; i < mNumProperties;++i)    {
@@ -529,7 +533,7 @@ aiReturn aiMaterial::AddProperty (const aiString* pInput,
         s[1] = static_cast<uint32_t>(pInput->length);
 
         return AddBinaryProperty(s+1,
-            pInput->length+1+4,
+            static_cast<unsigned int>(pInput->length+1+4),
             pKey,
             type,
             index,
@@ -537,7 +541,7 @@ aiReturn aiMaterial::AddProperty (const aiString* pInput,
     }
     ai_assert(sizeof(size_t)==4);
     return AddBinaryProperty(pInput,
-        pInput->length+1+4,
+        static_cast<unsigned int>(pInput->length+1+4),
         pKey,
         type,
         index,

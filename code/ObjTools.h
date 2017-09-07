@@ -2,7 +2,8 @@
 Open Asset Import Library (assimp)
 ----------------------------------------------------------------------
 
-Copyright (c) 2006-2016, assimp team
+Copyright (c) 2006-2017, assimp team
+
 All rights reserved.
 
 Redistribution and use of this software in source and binary forms,
@@ -48,8 +49,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "ParsingUtils.h"
 #include <vector>
 
-namespace Assimp
-{
+namespace Assimp {
 
 /** @brief  Returns true, if the last entry of the buffer is reached.
  *  @param  it  Iterator of current position.
@@ -57,15 +57,14 @@ namespace Assimp
  *  @return true, if the end of the buffer is reached.
  */
 template<class char_t>
-inline bool isEndOfBuffer(  char_t it, char_t end )
-{
+inline bool isEndOfBuffer(  char_t it, char_t end ) {
     if ( it == end )
     {
         return true;
     }
     else
     {
-        end--;
+        --end;
     }
     return ( it == end );
 }
@@ -80,8 +79,10 @@ inline Char_T getNextWord( Char_T pBuffer, Char_T pEnd )
 {
     while ( !isEndOfBuffer( pBuffer, pEnd ) )
     {
-        if( !IsSpaceOrNewLine( *pBuffer ) || IsLineEnd( *pBuffer ) )
-            break;
+        if ( !IsSpaceOrNewLine( *pBuffer ) || IsLineEnd( *pBuffer ) ) {
+            //if ( *pBuffer != '\\' )
+                break;
+        }
         pBuffer++;
     }
     return pBuffer;
@@ -115,14 +116,16 @@ inline char_t skipLine( char_t it, char_t end, unsigned int &uiLine ) {
     while( !isEndOfBuffer( it, end ) && !IsLineEnd( *it ) ) {
         ++it;
     }
-    if ( it != end )
-    {
+    
+    if ( it != end ) {
         ++it;
         ++uiLine;
     }
     // fix .. from time to time there are spaces at the beginning of a material line
-    while ( it != end && (*it == '\t' || *it == ' ') )
+    while ( it != end && ( *it == '\t' || *it == ' ' ) ) {
         ++it;
+    }
+
     return it;
 }
 
@@ -142,15 +145,13 @@ inline char_t getName( char_t it, char_t end, std::string &name )
     }
 
     char *pStart = &( *it );
-    while( !isEndOfBuffer( it, end ) && !IsLineEnd( *it ) && !IsSpaceOrNewLine( *it ) ) {
+    while( !isEndOfBuffer( it, end ) && !IsLineEnd( *it )) {
         ++it;
     }
 
-    /*while( isEndOfBuffer( it, end ) || IsLineEnd( *it ) || IsSpaceOrNewLine( *it ) ) {
+    while(IsSpace( *it ) ) {
         --it;
     }
-    ++it;
-    */
     // Get name
     // if there is no name, and the previous char is a separator, come back to start
     while (&(*it) < pStart) {

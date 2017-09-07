@@ -3,7 +3,8 @@
 Open Asset Import Library (assimp)
 ---------------------------------------------------------------------------
 
-Copyright (c) 2006-2016, assimp team
+Copyright (c) 2006-2017, assimp team
+
 
 All rights reserved.
 
@@ -52,6 +53,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "MemoryIOWrapper.h"
 #include <assimp/mesh.h>
 #include <assimp/scene.h>
+#include <assimp/importerdesc.h>
 #include <cctype>
 #include <memory>
 
@@ -711,7 +713,7 @@ unsigned int XGLImporter::ResolveMaterialRef(TempScope& scope)
     const std::string& s = GetElementName();
     if (s == "mat") {
         ReadMaterial(scope);
-        return scope.materials_linear.size()-1;
+        return static_cast<unsigned int>(scope.materials_linear.size()-1);
     }
 
     const int id = ReadIndexFromText();
